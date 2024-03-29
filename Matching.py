@@ -28,7 +28,7 @@ class Matching:
                         if not visited_house[house]:
                             visited_house[house] = True
                             previous[house] = agent
-                            print(previous)
+                            #print(previous)
                             if house not in matching:
                                 return house
                             else:
@@ -51,7 +51,7 @@ class Matching:
         visited_house = [False] * self.n
         previous = [FREE] * self.n 
         house = augmenting_path(start)
-        print(house)
+        #print(house)
         if house is None: 
              return [] 
         else:
@@ -82,19 +82,35 @@ class Matching:
 
 
     def finalmatching(self,start_ind,matching, graph):
-        if (self.hasAugmenting(start_ind,matching, graph) == []):
-            return matching
+        if (self.hasAugmenting(start_ind,self.matching, graph) == []):
+            return self.matching
         else:
-            if self.matching[start_ind] == -1: 
-                    print(self.hasAugmenting(start_ind,matching,graph))
+            if self.matching[start_ind] == -1:
+                    #print(self.hasAugmenting(start_ind,matching,graph))
                     x = self.hasAugmenting(start_ind, matching,graph)
                     print(x)
                     temp = self.matching
                     print(temp)
                     self.matching = self.flipPath(x, temp)
-                    print(self.hasAugmenting(1,self.matching,self.graph))
+                    print(self.hasAugmenting(start_ind,self.matching,self.graph))
                     return self.finalmatching(self.matching.index(-1),self.matching,self.graph)
              
+    
+    def maxmatching(self):
+            for i in range(self.n):
+                 if self.matching[i] == -1:
+                    if (self.hasAugmenting(i, self.matching, self.graph) == []):
+                        return self.matching
+                    else:
+                         x = self.hasAugmenting(i, self.matching, self.graph)
+                         #print(x)
+                         temp = self.matching
+                         #print(temp)
+                         self.matching = self.flipPath(x, temp)
+                         #print(self.matching)
+            return self.matching 
+            
+                      
           
         
                  
@@ -133,10 +149,12 @@ graph1 = {  0 : [0],
 
 matching_instance = Matching([-1,-1,-1,-1],4, graph1)
 #print(matching_instance.flipPath([0,0,1,1,2,2,3,3], [-1, 0, 1, 2] ) )
-#print(matching_instance.hasAugmenting(0, [0, 1, 2, 3],graph1))
+#print(matching_instance.hasAugmenting(1, [0, -1, -1, -1],graph1))
 #new_match = finalmatching3(matching_instance)
 #print(new_match)
 #print(matching_instance.finalmatching(0,matching_instance.matching,matching_instance.graph))
+print(matching_instance.maxmatching())
+
 
 #print(matching_instance.getaugmenting([0,1,2,3], 3, [-1, 0, 1, 2], 0))
 
