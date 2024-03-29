@@ -75,22 +75,59 @@ class Matching:
                          temp = self.matching
                          self.matching = self.flipPath(x, temp)
             return self.matching 
-            
+    
+    def decompose(self, matching):
+            unreachable_house = []
+            unreachable_agent = []
+            even_house = [] 
+            even_agent = []
+            odd_house = []
+            odd_agent = []  
+            for i in range(self.n): 
+                unreachable_house.append(i)
+                unreachable_agent.append(i)  
+            if -1 not in matching: 
+                    return unreachable_house, unreachable_agent, odd_house, odd_agent, even_house, even_agent 
+            else: 
+                     x = matching.index(-1)
+                     even_agent.append(x)
+                     unreachable_agent.remove(x)
+                     for i in self.graph[x]:
+                          odd_house.append(i)
+                          unreachable_house.remove(i)
+                          for i in odd_house: 
+                               y = matching.index(i)
+                               even_agent.append(y)
+                               unreachable_agent.remove(y)
+                     for i in unreachable_house:
+                          if i not in matching:
+                               even_house.append(i)
+                               unreachable_house.remove(i)
+                               for j in range(self.n): 
+                                    if i in self.graph[j]:
+                                         odd_agent.append(j)
+                                         unreachable_agent.remove(j)
+                                         z = matching[j]
+                                         even_house.append(z)
+                                         unreachable_house.remove(z)
+            return unreachable_house, unreachable_agent, odd_house, odd_agent, even_house, even_agent
+                        
     def addEdgesAndMatch(E):
         pass
 
 
 #Test Cases: 
     
-graph1 = {  0 : [1],
-            1 : [],
-            2 : [2],
-            3 : [3]}
+graph1 = {  0 : [0],
+            1 : [0,1],
+            2 : [1, 2],
+            3 : [2,3]}
 
 matching_instance = Matching([-1,-1,-1,-1],4, graph1)
 #print(matching_instance.flipPath([0,0,1,1,2,2,3,3], [-1, 0, 1, 2] ) )
 #print(matching_instance.hasAugmenting(3, [1, -1, -1, -1],graph1))
 print(matching_instance.maxmatching())
+#print(matching_instance.decompose([1, -1, 2, 3, 5, -1]))
 
 """
 def hasAugmenting_helper(self, start, matching, graph): 
