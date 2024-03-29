@@ -142,10 +142,10 @@ class Matching:
 
 #Test Cases: 
     
-graph1 = {  0 : [0],
-            1 : [0, 1],
-            2 : [1, 2],
-            3 : [2, 3]}
+graph1 = {  0 : [1],
+            1 : [1],
+            2 : [2],
+            3 : [3]}
 
 matching_instance = Matching([-1,-1,-1,-1],4, graph1)
 #print(matching_instance.flipPath([0,0,1,1,2,2,3,3], [-1, 0, 1, 2] ) )
