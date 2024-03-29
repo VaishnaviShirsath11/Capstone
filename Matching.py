@@ -1,18 +1,6 @@
 
 FREE = -1  
 
-def finalmatching3(m1):
-            start_ind = m1.matching.index(-1)
-            if (m1.hasAugmenting(start_ind, m1.matching ,m1.graph) == []):
-                return m1.matching 
-            else:
-                if m1.matching[start_ind] == -1: 
-                    x = m1.hasAugmenting(start_ind, m1.matching, m1.graph)
-                    temp = m1.matching
-                    m1.matching = m1.flipPath(x, temp)
-                    k = Matching(m1.matching, m1.n, m1.graph)
-                    return finalmatching3(k)
-
 class Matching:
     def __init__(self, matching, n, graph):
         self.matching = matching
@@ -76,67 +64,18 @@ class Matching:
             matching [path[i]] = path[i+1]
         return matching
 
-    def finalmatching2(self,start_ind):
-         if (self.hasAugmenting(start_ind,self.matching, self.graph) == []):
-              return self.matching  
-
-
-    def finalmatching(self,start_ind,matching, graph):
-        if (self.hasAugmenting(start_ind,self.matching, graph) == []):
-            return self.matching
-        else:
-            if self.matching[start_ind] == -1:
-                    #print(self.hasAugmenting(start_ind,matching,graph))
-                    x = self.hasAugmenting(start_ind, matching,graph)
-                    print(x)
-                    temp = self.matching
-                    print(temp)
-                    self.matching = self.flipPath(x, temp)
-                    print(self.hasAugmenting(start_ind,self.matching,self.graph))
-                    return self.finalmatching(self.matching.index(-1),self.matching,self.graph)
-             
-    
     def maxmatching(self):
             for i in range(self.n):
                  if self.matching[i] == -1:
                     if (self.hasAugmenting(i, self.matching, self.graph) == []):
-                        if (i == self.n):
+                        if (i == self.n-1):
                             return self.matching
                     else:
                          x = self.hasAugmenting(i, self.matching, self.graph)
-                         #print(x)
                          temp = self.matching
-                         #print(temp)
                          self.matching = self.flipPath(x, temp)
-                         #print(self.matching)
             return self.matching 
             
-                      
-          
-        
-                 
-                 
-
-    
-
-
-
-    
-            
-
-                
-                  
-                 
-                 
-            
-            """
-            for i in range(self.n):
-                if matching[i] == -1: 
-                    x = self.hasAugmenting(i, matching, graph)
-                    new_matching = self.flipPath(x, matching)
-                    
-            """
-       
     def addEdgesAndMatch(E):
         pass
 
@@ -151,14 +90,7 @@ graph1 = {  0 : [1],
 matching_instance = Matching([-1,-1,-1,-1],4, graph1)
 #print(matching_instance.flipPath([0,0,1,1,2,2,3,3], [-1, 0, 1, 2] ) )
 #print(matching_instance.hasAugmenting(3, [1, -1, -1, -1],graph1))
-#new_match = finalmatching3(matching_instance)
-#print(new_match)
-#print(matching_instance.finalmatching(0,matching_instance.matching,matching_instance.graph))
 print(matching_instance.maxmatching())
-
-
-#print(matching_instance.getaugmenting([0,1,2,3], 3, [-1, 0, 1, 2], 0))
-
 
 """
 def hasAugmenting_helper(self, start, matching, graph): 
