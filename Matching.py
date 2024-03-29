@@ -100,7 +100,8 @@ class Matching:
             for i in range(self.n):
                  if self.matching[i] == -1:
                     if (self.hasAugmenting(i, self.matching, self.graph) == []):
-                        return self.matching
+                        if (i == self.n):
+                            return self.matching
                     else:
                          x = self.hasAugmenting(i, self.matching, self.graph)
                          #print(x)
@@ -143,13 +144,13 @@ class Matching:
 #Test Cases: 
     
 graph1 = {  0 : [1],
-            1 : [1],
+            1 : [],
             2 : [2],
             3 : [3]}
 
 matching_instance = Matching([-1,-1,-1,-1],4, graph1)
 #print(matching_instance.flipPath([0,0,1,1,2,2,3,3], [-1, 0, 1, 2] ) )
-#print(matching_instance.hasAugmenting(1, [0, -1, -1, -1],graph1))
+#print(matching_instance.hasAugmenting(3, [1, -1, -1, -1],graph1))
 #new_match = finalmatching3(matching_instance)
 #print(new_match)
 #print(matching_instance.finalmatching(0,matching_instance.matching,matching_instance.graph))
