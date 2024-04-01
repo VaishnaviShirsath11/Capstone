@@ -1,4 +1,6 @@
 
+import copy
+
 FREE = -1  
 
 class Matching:
@@ -9,19 +11,23 @@ class Matching:
 
     def hasAugmenting(self, start, matching, graph):
         def augmenting_path(agent): 
+            #print(agent)
             if visited_agent[agent] == False:
                 visited_agent[agent] = True
-                #start is a free vertex 
+                #print(visited_agent)
+                #start is a free vertex  
                 for house in graph[agent]:
                         if not visited_house[house]:
+                            #print(house)
                             visited_house[house] = True
+                            #print(visited_house)
                             previous[house] = agent
                             #print(previous)
                             if house not in matching:
                                 return house
                             else:
                                 new_agent = matching.index(house)
-                                result = augmenting_path(new_agent)
+                                result = augmenting_path(new_agent) 
                                 if result != None:
                                     return result  #if last vertex found return it, else continue the function 
                         
@@ -39,7 +45,6 @@ class Matching:
         visited_house = [False] * self.n
         previous = [FREE] * self.n 
         house = augmenting_path(start)
-        #print(house)
         if house is None: 
              return [] 
         else:
@@ -59,58 +64,65 @@ class Matching:
         """
         Input: path - list of vertices, which represents an augmenting path
         output: updates matching by flippping edges on augmenting path provided as input
-        """
+        
         for i in range (0,len(path),2):
             matching [path[i]] = path[i+1]
         return matching
 
+        """
+        new_matching = matching[:]  # Create a copy of matching
+        for i in range(0, len(path), 2):
+             new_matching[path[i]] = path[i + 1]
+             return new_matching
+        
+
+    def is_adjacent(self, agent, house, graph):
+         return house in self.graph[agent]
+         
     def maxmatching(self):
-            for i in range(self.n):
-                 if self.matching[i] == -1:
-                    if (self.hasAugmenting(i, self.matching, self.graph) == []):
-                        if (i == self.n-1):
-                            return self.matching
-                    else:
-                         x = self.hasAugmenting(i, self.matching, self.graph)
-                         temp = self.matching
-                         self.matching = self.flipPath(x, temp)
-            return self.matching 
-    
-    def decompose(self, matching):
             unreachable_house = []
             unreachable_agent = []
             even_house = [] 
             even_agent = []
             odd_house = []
-            odd_agent = []  
-            for i in range(self.n): 
-                unreachable_house.append(i)
-                unreachable_agent.append(i)  
-            if -1 not in matching: 
-                    return unreachable_house, unreachable_agent, odd_house, odd_agent, even_house, even_agent 
-            else: 
-                     x = matching.index(-1)
-                     even_agent.append(x)
-                     unreachable_agent.remove(x)
-                     for i in self.graph[x]:
-                          odd_house.append(i)
-                          unreachable_house.remove(i)
-                          for i in odd_house: 
-                               y = matching.index(i)
-                               even_agent.append(y)
-                               unreachable_agent.remove(y)
-                     for i in unreachable_house:
-                          if i not in matching:
-                               even_house.append(i)
-                               unreachable_house.remove(i)
-                               for j in range(self.n): 
-                                    if i in self.graph[j]:
-                                         odd_agent.append(j)
-                                         unreachable_agent.remove(j)
-                                         z = matching[j]
-                                         even_house.append(z)
-                                         unreachable_house.remove(z)
-            return unreachable_house, unreachable_agent, odd_house, odd_agent, even_house, even_agent
+            odd_agent = [] 
+            diff_list = []
+            for i in range(self.n):
+                 even_agent.append(i) 
+                 even_house.append(i)
+            for i in range(self.n):
+                 if self.matching[i] == -1:
+                    if (self.hasAugmenting(i, self.matching, self.graph) == []):
+                        if (i == (self.n)-1):
+                            return self.matching
+                    else:
+                         x = self.hasAugmenting(i, self.matching, self.graph)
+                         temp = self.matching
+                         #print(temp)
+                         self.matching = self.flipPath(x, temp)                              
+                         #print(self.matching)
+                         for index, (elem1, elem2) in enumerate(zip(temp, self.matching)):
+                            if elem1 != elem2:
+                                diff_list.append(index)
+                                last_index = diff_list[-1]
+                                differ_matching = self.matching[last_index] 
+                                even_house.remove(differ_matching)
+                                even_agent.remove(last_index)
+                                
+                                if self.is_adjacent(last_index, differ_matching, self.graph):
+                                    if any(differ_matching in self.graph[i] for i in even_agent):
+                                        odd_house.append(differ_matching)
+                                        even_agent.append(last_index)
+                                    elif any(i in even_house for i in self.graph[last_index]):
+                                        odd_agent.append(last_index)
+                                        even_house.append(differ_matching)
+                                    else:
+                                        unreachable_agent.append(last_index)
+                                        unreachable_house.append(differ_matching)
+
+            return self.matching, even_agent, even_house, odd_agent, odd_house, unreachable_agent, unreachable_house
+    
+
                         
     def addEdgesAndMatch(E):
         pass
@@ -118,14 +130,16 @@ class Matching:
 
 #Test Cases: 
     
-graph1 = {  0 : [0],
-            1 : [0,1],
-            2 : [1, 2],
-            3 : [2,3]}
+graph1 = {  0 : [1],
+            1 : [1],
+            2 : [],
+            3 : [2, 3],
+            4 : [4], 
+            5 : [5]}
 
-matching_instance = Matching([-1,-1,-1,-1],4, graph1)
+matching_instance = Matching([-1,-1,-1,-1, -1, -1],6, graph1)
 #print(matching_instance.flipPath([0,0,1,1,2,2,3,3], [-1, 0, 1, 2] ) )
-#print(matching_instance.hasAugmenting(3, [1, -1, -1, -1],graph1))
+#print(matching_instance.hasAugmenting(3, [1, 2, 3, -1],graph1))
 print(matching_instance.maxmatching())
 #print(matching_instance.decompose([1, -1, 2, 3, 5, -1]))
 
@@ -173,3 +187,16 @@ def hasAugmenting_helper(self, start, matching, graph):
                         house = result
             return path
 """
+
+list1 = [0, -1, -1, -1]
+list2 = [0, 1, -1, -1]
+
+differences = []
+
+for index, (elem1, elem2) in enumerate(zip(list1, list2)):
+    if elem1 != elem2:
+        differences.append((index, elem1, elem2))
+
+#print("Differences found at:")
+#for diff in differences:
+#    print(f"Index: {diff[0]}, Value in list1: {diff[1]}, Value in list2: {diff[2]}")
