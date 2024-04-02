@@ -134,10 +134,9 @@ graph1 = {  0 : [1],
             1 : [1],
             2 : [],
             3 : [2, 3],
-            4 : [4], 
-            5 : [5]}
+            4 : [4]}
 
-matching_instance = Matching([-1,-1,-1,-1, -1, -1],6, graph1)
+matching_instance = Matching([-1,-1,-1,-1, -1],5, graph1)
 #print(matching_instance.flipPath([0,0,1,1,2,2,3,3], [-1, 0, 1, 2] ) )
 #print(matching_instance.hasAugmenting(3, [1, 2, 3, -1],graph1))
 print(matching_instance.maxmatching())
