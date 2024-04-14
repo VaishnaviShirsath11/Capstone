@@ -150,7 +150,7 @@ class Matching:
             maximum_matching.pop(0)
             return maximum_matching
 
-        for i in range(agents):
+        for i in range(1, agents):
             for a in unfinished_agents:          
                 h = x.query(a)  
                 #print(h)        
@@ -213,5 +213,5 @@ matching_instance = Matching([-1,-1, -1, -1],4, graph)
 #print(matching_instance.hasAugmenting(1, [0, -1, -1, -1],graph))
 #print(matching_instance.maxmatching())
 #print(matching_instance.decompose([0, 2, 3, 1], graph))
-#print(Matching.NextBestMatch(10, 10))
+print(Matching.NextBestMatch(10, 10))
 
